@@ -34,7 +34,7 @@ jobs:
 
       - name: Extract Tanzeb Gallery
         run: |
-          unzip -q TanzebGallery-Android-Project.zip -d project
+          unzip -q TanzebGallery-Android-Project-FIXED.zip -d project
 
       - name: Build APK
         run: |
