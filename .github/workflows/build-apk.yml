@@ -1,4 +1,4 @@
-name: Build Tanzeb APK
+name: Build Tanzeb V2 APK
 
 on:
   workflow_dispatch:
@@ -32,17 +32,23 @@ jobs:
         with:
           gradle-version: '8.10'
 
-      - name: Extract Tanzeb Gallery
+      - name: Extract Tanzeb V2
         run: |
-          unzip -q TanzebGallery-Android-Project-FIXED.zip -d project
+          unzip -q TanzebGallery-V2-ALBUM-PRIVATE.zip -d project
+          find project -maxdepth 3 -type f | head -50
 
-      - name: Build APK
+      - name: Find Android Project
+        run: |
+          find project -name settings.gradle -o -name settings.gradle.kts
+
+      - name: Build V2 APK
         run: |
           cd project/TanzebGallery
           gradle assembleDebug
 
-      - name: Upload APK
+      - name: Upload V2 APK
         uses: actions/upload-artifact@v4
         with:
-          name: Tanzeb-Gallery-APK
+          name: Tanzeb-Gallery-V2
           path: project/TanzebGallery/app/build/outputs/apk/debug/app-debug.apk
+          
