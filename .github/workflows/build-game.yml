@@ -11,26 +11,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Extract Android ZIP
-        run: |
-          unzip -o TanzebGameHub-Android.zip
-          cp -r TanzebGameHub/* .
-          cp -r TanzebGameHub/.[!.]* . 2>/dev/null || true
-
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK
+        run: |
+          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10'
+
+      - name: Extract Game Hub
+        run: |
+          rm -rf build-project
+          mkdir build-project
+          unzip -q TanzebGameHub-Android.zip -d build-project
 
       - name: Build APK
-        run: gradle assembleDebug
+        working-directory: build-project/TanzebGameHub
+        run: gradle :app:assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Tanzeb-Game-Hub-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: build-project/TanzebGameHub/app/build/outputs/apk/debug/app-debug.apk     
